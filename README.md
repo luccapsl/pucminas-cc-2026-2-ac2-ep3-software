@@ -189,7 +189,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 1 — Tradutor (`tradutor.py`)
 
-| Integrante 4 — entrada | Integrante 5 — saída |
+| Lucca — entrada | Clarisse — saída |
 |---|---|
 | Abertura e leitura do `.ula` | Tabela dos 16 mnemônicos |
 | Normalização de espaços, tabs e `CRLF` | Conversão decimal → hexadecimal de X e Y |
@@ -198,7 +198,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 2 — Validação (`validador.py`)
 
-| Integrante 4 | Integrante 5 |
+| Lucca | Clarisse |
 |---|---|
 | Linha em branco | Mnemônico inexistente |
 | Falta de ponto e vírgula | Valor fora da faixa de 4 bits |
@@ -207,7 +207,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 3 — Serial (`serial_envio.py`)
 
-| Integrante 4 | Integrante 5 |
+| Lucca | Clarisse |
 |---|---|
 | Abertura da porta e pausa de 2 s | Argumentos de linha de comando (`--porta`) |
 | Transmissão do `.hex` em bloco único | Modo alternativo: impressão em tela para copiar e colar |
@@ -215,7 +215,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 4 — Arquivo de teste (`testeula.ula`)
 
-| Integrante 4 | Integrante 5 |
+| Lucca | Clarisse |
 |---|---|
 | Cobertura das 16 instruções da tabela | Os dois casos de erro (sintaxe e linha em branco) |
 | Reaproveitamento de X e Y sem reatribuição | `zeroL` e `umL`, que ignoram as entradas |
