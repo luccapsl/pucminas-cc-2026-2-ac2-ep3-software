@@ -6,26 +6,26 @@
 # ----------------------------------#
 
 import os
-from variaveis import nomeArquivo
+from variaveis import nomeArquivo, conteudo
 
 def ler_arquivo_ula(nomeArquivo):
-    """ Faz a leitura do arquivo .ula
+    """ Faz a leitura do arquivo .ula, enumera cada linha e salva em uma variavel vetorizada
 
     Args:
         nomeArquivo: nome do arquivo .ula
 
     Returns:
-        conteudo do arquivo (se nao existir, retorna None)
-
+        conteudo do arquivo
+        formato: [(num_linha, 'texto_linha'), ..., (num_linha, 'texto_linha')]
     """
-
-    conteudo = None
 
     if (os.path.exists(nomeArquivo)):
         with open(nomeArquivo, "r", encoding="utf-8") as arquivo:
-            conteudo = arquivo.read()
-            
+            for num_linha, texto_linha in enumerate(arquivo, start=1):
+                conteudo.append((num_linha, texto_linha))
     else:
         print("[ERRO] - Arquivo com nome %s nao foi encontrado. Leitura impossivel de ser realizada." % nomeArquivo)
 
     return conteudo
+
+ler_arquivo_ula(nomeArquivo)

@@ -9,8 +9,15 @@
 
 
 # ---------------------------
-# Arquivo de entrada .ula
+# Nome do arquivo de entrada .ula
 # ---------------------------
 
 nomeArquivo = "testeula.ula"
+
+
+# ---------------------------
+# Variavel que armazena o conteudo de .ula
+# ---------------------------
+
+conteudo = []
 

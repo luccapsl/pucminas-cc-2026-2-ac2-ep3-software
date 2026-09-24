@@ -1,20 +1,8 @@
-# pucminas-cc-2026-2-ac2-ep3-software
-Desenvolvimento do software em Python que traduzirá um .ula para um arquivo .hex utilizando todos os 16 mnemônicos de uma ULA de 4 bits.
+# ULA 4 bits — Software do PC
 
-Montador e interface serial do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2 do curso de Ciência da Computação da PUC Minas (2026/2).
+Montador e interface serial do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2.
 
-Este repositório contém **apenas o lado PC**. O firmware do Arduino é mantido pelos outros três integrantes do grupo.
-
-# Integrantes 
-
-- Arduino
-  - Ana Flávia Menezes de Almeida 
-  - Jamille Micaele Soares Ferreira 
-  - Julia Batista Moreira
-  
-- Python
-  - Clarisse de Assis Pereira
-  - Lucca de Paula Silva Lopes
+Este repositório contém **apenas o lado PC**. O firmware do Arduino está em repositório separado, mantido pelos outros três integrantes do grupo.
 
 ## O que este programa faz
 
@@ -189,7 +177,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 1 — Tradutor (`tradutor.py`)
 
-| Lucca — entrada | Clarisse — saída |
+| Integrante 4 — entrada | Integrante 5 — saída |
 |---|---|
 | Abertura e leitura do `.ula` | Tabela dos 16 mnemônicos |
 | Normalização de espaços, tabs e `CRLF` | Conversão decimal → hexadecimal de X e Y |
@@ -198,7 +186,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 2 — Validação (`validador.py`)
 
-| Lucca | Clarisse |
+| Integrante 4 | Integrante 5 |
 |---|---|
 | Linha em branco | Mnemônico inexistente |
 | Falta de ponto e vírgula | Valor fora da faixa de 4 bits |
@@ -207,7 +195,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 3 — Serial (`serial_envio.py`)
 
-| Lucca | Clarisse |
+| Integrante 4 | Integrante 5 |
 |---|---|
 | Abertura da porta e pausa de 2 s | Argumentos de linha de comando (`--porta`) |
 | Transmissão do `.hex` em bloco único | Modo alternativo: impressão em tela para copiar e colar |
@@ -215,7 +203,7 @@ Cada etapa do software é dividida ao meio entre os dois integrantes, de modo qu
 
 ### Etapa 4 — Arquivo de teste (`testeula.ula`)
 
-| Lucca | Clarisse |
+| Integrante 4 | Integrante 5 |
 |---|---|
 | Cobertura das 16 instruções da tabela | Os dois casos de erro (sintaxe e linha em branco) |
 | Reaproveitamento de X e Y sem reatribuição | `zeroL` e `umL`, que ignoram as entradas |
