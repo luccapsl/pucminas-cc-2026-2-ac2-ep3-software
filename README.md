@@ -1,54 +1,50 @@
 # ULA 4 bits — Software do PC
 
-Montador e interface serial do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2.
+Montador do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2.
 
-Este repositório contém **apenas o lado PC**. O firmware do Arduino está em repositório separado, mantido pelos outros três integrantes do grupo.
+Este repositório contém **apenas o lado PC**. O firmware do Arduino está em repositório separado, mantido pelos três integrantes responsáveis pelo hardware.
 
 ## O que este programa faz
 
 1. Lê o arquivo fonte `testeula.ula`, escrito com os mnemônicos da ULA.
-2. Traduz cada operação em uma palavra hexadecimal de 3 dígitos (`XYS`) e grava o resultado em `testeula.hex`.
-3. Detecta erros no fonte (sintaxe inválida e linhas em branco), reporta e **continua** a tradução.
-4. Envia o `.hex` gerado ao Arduino pela porta serial, em bloco único.
+2. Detecta erros no fonte (sintaxe inválida e linhas em branco), reporta e **continua** a tradução.
+3. Traduz cada operação em uma palavra hexadecimal de 3 dígitos (`XYS`).
+4. Grava o resultado em `testeula.hex` e exibe o conteúdo na tela.
 
-O Arduino executa o `.hex`, nunca o `.ula`.
+O programa **não se comunica com o Arduino**. Sua única saída é o arquivo `testeula.hex`, que é levado ao Arduino manualmente pelo Monitor Serial. O Arduino executa o `.hex`, nunca o `.ula`.
 
 ## Requisitos
 
 - Python 3.10 ou superior
-- `pyserial` (somente para o envio serial)
-
-```bash
-pip install pyserial
-```
+- Nenhuma biblioteca externa
 
 ## Uso
-
-Traduzir o fonte e gerar o executável:
 
 ```bash
 python montador.py testeula.ula
 ```
 
-Traduzir e enviar direto ao Arduino:
+Sem argumento, o programa procura `testeula.ula` na pasta atual. A saída é sempre gravada como `testeula.hex`, na mesma pasta.
 
-```bash
-python montador.py testeula.ula --porta COM3
-python montador.py testeula.ula --porta /dev/ttyUSB0
-```
+## Como levar o .hex ao Arduino
 
-Se a porta serial não estiver disponível, o conteúdo do `.hex` é impresso na tela para ser copiado e colado no campo "Enviar" do Monitor Serial da IDE do Arduino. Os dois caminhos são equivalentes do ponto de vista do Arduino.
+1. Abra o Monitor Serial da IDE do Arduino, com o firmware do grupo já gravado na placa.
+2. Ajuste o baud rate e o terminador de linha conforme definido no repositório do Arduino.
+3. Abra o `testeula.hex` (ou copie o conteúdo exibido na tela pelo montador).
+4. Selecione **todo** o conteúdo, cole no campo "Enviar" e envie de uma vez.
+
+A especificação exige que a carga seja feita em bloco único. Não se digita uma instrução de cada vez.
 
 ## Estrutura do repositório
 
 ```
 .
-├── montador.py        # ponto de entrada: lê o .ula, gera o .hex, envia
-├── tradutor.py        # tabela de mnemônicos e conversão linha a linha
-├── validador.py       # detecção e relato dos erros do fonte
-├── serial_envio.py    # comunicação com o Arduino
-├── testeula.ula       # fonte de teste do grupo (cobre as 16 instruções e os 2 erros)
-├── testeula.hex       # saída gerada
+├── montador.py     # ponto de entrada: orquestra leitura, tradução e gravação
+├── tradutor.py     # leitura do fonte, estado de X e Y, tabela de mnemônicos
+├── validador.py    # detecção e relato dos erros do fonte
+├── saida.py        # gravação do testeula.hex e exibição na tela
+├── testeula.ula    # fonte de teste do grupo (cobre as 16 instruções e os 2 erros)
+├── testeula.hex    # saída gerada
 └── README.md
 ```
 
@@ -146,17 +142,7 @@ Também são tratados como erro os valores fora da faixa de 4 bits, como `X=20`.
 
 O parser normaliza espaços, tabulações e finais de linha `CRLF` antes de analisar cada linha, e compara os mnemônicos por igualdade completa — `nA` e `nAoB` não se confundem.
 
-## Comunicação serial
-
-| Parâmetro | Valor |
-|---|---|
-| Baud rate | 9600 |
-| Terminador de linha | `\n` (NL) |
-| Pausa após abrir a porta | 2 segundos |
-
-A pausa é obrigatória: abrir a porta serial reinicia o Arduino, e enviar antes disso faz o bloco se perder. O `.hex` é transmitido inteiro, de uma vez — o Arduino carrega tudo na memória antes de executar qualquer instrução.
-
-Enquanto o programa do PC estiver usando a porta, o Monitor Serial da IDE do Arduino precisa estar fechado.
+O número de linha informado nas mensagens é sempre o do arquivo `.ula` original, e não tem relação com a posição da instrução na memória do Arduino.
 
 ## Arquivo de teste
 
@@ -173,45 +159,51 @@ O arquivo usado na avaliação é outro e só será conhecido no momento da apre
 
 ## Divisão de trabalho (lado PC)
 
-Cada etapa do software é dividida ao meio entre os dois integrantes, de modo que nenhum dos dois seja o único a conhecer qualquer parte do fluxo. O corte segue a fronteira natural de cada módulo: um lado cuida da **entrada**, o outro da **saída**.
+### Lucca — Etapas 1 e 2
 
-### Etapa 1 — Tradutor (`tradutor.py`)
+**Etapa 1 — Tradutor (`tradutor.py`)**
 
-| Integrante 4 — entrada | Integrante 5 — saída |
-|---|---|
-| Abertura e leitura do `.ula` | Tabela dos 16 mnemônicos |
-| Normalização de espaços, tabs e `CRLF` | Conversão decimal → hexadecimal de X e Y |
-| Reconhecimento de `inicio:` e `fim.` | Montagem da palavra `XYS` |
-| Parsing de `X=` e `Y=` e estado interno | Gravação do `testeula.hex` |
+- Abertura e leitura do `.ula`, com numeração das linhas a partir de 1
+- Normalização de espaços, tabulações e `CRLF`
+- Reconhecimento de `inicio:` e `fim.`
+- Parsing de `X=` e `Y=` e manutenção do estado interno
+- Tabela dos 16 mnemônicos
+- Conversão decimal → hexadecimal de X e Y
+- Montagem da palavra `XYS`
 
-### Etapa 2 — Validação (`validador.py`)
+**Etapa 2 — Validação (`validador.py`)**
 
-| Integrante 4 | Integrante 5 |
-|---|---|
-| Linha em branco | Mnemônico inexistente |
-| Falta de ponto e vírgula | Valor fora da faixa de 4 bits |
-| Variável desconhecida à esquerda do `=` | Padronização das mensagens `[ERRO]` / `[AVISO]` |
-| Garantia de que o erro não interrompe a tradução | Resumo final com contagem de erros e instruções |
+- Linha em branco
+- Falta de ponto e vírgula
+- Variável desconhecida à esquerda do `=`
+- Mnemônico inexistente
+- Valor fora da faixa de 4 bits
+- Padronização das mensagens `[ERRO]` / `[AVISO]`
+- Garantia de que nenhum erro interrompe a tradução
 
-### Etapa 3 — Serial (`serial_envio.py`)
+### Clarisse — Etapas 3 e 4
 
-| Integrante 4 | Integrante 5 |
-|---|---|
-| Abertura da porta e pausa de 2 s | Argumentos de linha de comando (`--porta`) |
-| Transmissão do `.hex` em bloco único | Modo alternativo: impressão em tela para copiar e colar |
-| Baud rate e terminador de linha | Tratamento de porta inexistente ou ocupada |
+**Etapa 3 — Saída (`saida.py` e `montador.py`)**
 
-### Etapa 4 — Arquivo de teste (`testeula.ula`)
+- Orquestração do fluxo em `montador.py`: leitura, tradução, validação, gravação
+- Argumento de linha de comando com o caminho do `.ula`
+- Gravação do `testeula.hex` no formato exato combinado com o Arduino
+- Exibição do conteúdo gerado na tela, pronto para copiar e colar
+- Resumo final com contagem de erros e de instruções geradas
 
-| Integrante 4 | Integrante 5 |
-|---|---|
-| Cobertura das 16 instruções da tabela | Os dois casos de erro (sintaxe e linha em branco) |
-| Reaproveitamento de X e Y sem reatribuição | `zeroL` e `umL`, que ignoram as entradas |
-| Conferência do `.hex` gerado contra o esperado | Conferência do resultado no Arduino, LED a LED |
+**Etapa 4 — Arquivo de teste (`testeula.ula`)**
+
+- Cobertura das 16 instruções da tabela
+- Reaproveitamento de X e Y sem reatribuição
+- `zeroL` e `umL`, que ignoram as entradas
+- Os dois casos de erro (sintaxe e linha em branco)
+- Conferência do `.hex` gerado contra o resultado esperado, calculado à mão
+- Conferência do resultado no Arduino, LED a LED, junto com a equipe de hardware
 
 ### Regras comuns
 
+- **Contrato entre as etapas:** Lucca entrega a lista de palavras `XYS` e a lista de erros; Clarisse grava e exibe. O formato dessas duas listas é combinado entre os dois antes de começar e não muda depois.
+- **Formato de linha do `.hex`:** acertado por Clarisse com o responsável pela memória do Arduino, já que ela é quem grava o arquivo.
 - Cada um comenta o próprio código; comentários são critério explícito de nota.
-- Toda etapa é revisada pelo outro antes de ser considerada pronta.
-- O formato exato de linha do `.hex` é acertado **pelos dois juntos** com o responsável pela memória do Arduino, já que a etapa 1 é compartilhada.
+- Cada um revisa o código do outro antes de a etapa ser considerada pronta.
 - Ambos treinam o rastreamento completo de `C6B`, do fonte `.ula` até os LEDs acesos. A entrevista é aleatória e nenhuma parte do fluxo pode ser desconhecida por qualquer um dos dois.
