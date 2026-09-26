@@ -6,6 +6,7 @@
 # ----------------------------------#
 
 import os
+import tratador
 from variaveis import nomeArquivo, conteudo
 
 def ler_arquivo_ula(nomeArquivo):
@@ -22,10 +23,12 @@ def ler_arquivo_ula(nomeArquivo):
     if (os.path.exists(nomeArquivo)):
         with open(nomeArquivo, "r", encoding="utf-8") as arquivo:
             for num_linha, texto_linha in enumerate(arquivo, start=1):
-                conteudo.append((num_linha, texto_linha))
+                conteudo.append((num_linha, limpeza_texto_linha(texto_linha)))
     else:
         print("[ERRO] - Arquivo com nome %s nao foi encontrado. Leitura impossivel de ser realizada." % nomeArquivo)
 
     return conteudo
 
-ler_arquivo_ula(nomeArquivo)
+
+
+#print(ler_arquivo_ula(nomeArquivo))
