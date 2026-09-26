@@ -5,19 +5,25 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
-# Arquivo para armazenar as principais variaveis do tradutor
+# Arquivo para armazenar as variaveis globais do programa
 
 
 # ---------------------------
 # Nome do arquivo de entrada .ula
 # ---------------------------
 
-nomeArquivo = "testeula.ula"
+nomeArquivo_ula = "testeula.ula"
 
 
 # ---------------------------
-# Variavel que armazena o conteudo de .ula
+# Conteudo de .ula
 # ---------------------------
 
 conteudo = []
+
+# ---------------------------
+# Nome do arquivo de saida .hex
+# ---------------------------
+
+nomeArquivo_hex = "testeula.hex"
 

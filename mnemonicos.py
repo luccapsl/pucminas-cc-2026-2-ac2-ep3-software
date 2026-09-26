@@ -5,50 +5,21 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
-def mnem_nA(a, b):
-    return int(not a)
+hash_mnemonicos = {}
 
-def mnem_AoBn(a, b):
-    return int(not (a or b))
-
-def mnem_nAeB(a, b):
-    return int((not a) and b)
-
-def mnem_zeroL(a, b):
-    return 0
-
-def mnem_AeBn(a, b):
-    return int(not (a and b))
-
-def mnem_nB(a, b):
-    return int(not b)
-
-def mnem_AxB(a, b):
-    return int(((not a) and b) or (a and (not b)))
-
-def mnem_AenB(a, b):
-    return int(a and (not b))
-
-def mnem_nAoB(a, b):
-    return int((not a) or b)
-
-def mnem_AxBn(a, b):
-    return int((a and b) or ((not a) and (not b)))
-
-def mnem_copiaB(a, b):
-    return b
-
-def mnem_AeB(a, b):
-    return int(a and b)
-
-def mnem_umL(a, b):
-    return 1
-
-def mnem_AonB(a, b):
-    return int(a or (not b))
-
-def mnem_AoB(a, b):
-    return int(a or b)
-
-def mnem_copiaA(a, b):
-    return a
+hash_mnemonicos[0] = "nA"
+hash_mnemonicos[1] = "AoBn"
+hash_mnemonicos[2] = "nAeB"
+hash_mnemonicos[3] = "zeroL"
+hash_mnemonicos[4] = "AeBn"
+hash_mnemonicos[5] = "nB"
+hash_mnemonicos[6] = "AxB"
+hash_mnemonicos[7] = "AenB"
+hash_mnemonicos[8] = "nAoB"
+hash_mnemonicos[9] = "AxBn"
+hash_mnemonicos[10] = "copiaB"
+hash_mnemonicos[11] = "AeB"
+hash_mnemonicos[12] = "umL"
+hash_mnemonicos[13] = "AonB"
+hash_mnemonicos[14] = "AoB"
+hash_mnemonicos[15] = "copiaA"

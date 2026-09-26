@@ -22,3 +22,21 @@ def limpeza_texto_linha(texto):
     texto = texto.replace(' ','')
 
     return texto
+
+def tratar_numero(texto, caractere):
+    """ Recebe um texto e um caractere e trata o numero que vem depois do caractere
+
+    Args:
+        texto: string contendo o texto
+        caractere: inteiro contendo o indice do caractere
+
+    Returns:
+        numero tratado
+    """
+
+    numero = ''
+    while (caractere < len(texto) and texto[caractere].isdigit()):
+        numero += texto[caractere]
+        caractere += 1
+
+    return int(numero)

@@ -9,68 +9,84 @@
 import os
 import tratador
 import validador
-from variaveis import nomeArquivo, conteudo
 
 
-def montagem_texto_hexa(conteudo)
-
-    validadorSintaxe = False
+def montagem_texto_hexa(conteudo):
+    linha = 0
+    validadorSintaxe = True
     conteudoHexadecimal = []
     
-    if (validar_conteudo_vazio(conteudo)):
-        if (validar_inicio(conteudo[0])):
+    if (validador.validar_inicio(conteudo[linha])):
 
-            controlador = True
-            linha = 1
-            caractere = 0
-            x = 0
-            y = 0
-            tamConteudo = len(conteudo)-1;
-            mnemonico = -1
+        linha += 1
+        caractere = 0
+        x = 0
+        y = 0
+        numero = -1
+        tamConteudo = len(conteudo)-1;
+        mnemonico = -1
+        
+        indiceConteudo = 0
+        
+        while ( linha <= tamConteudo and validadorSintaxe == True):
 
-            indiceConteudo = 0
+            texto = conteudo[linha]
+            if (validador.validar_pontovirgula(texto[len(texto)-1], linha)):
 
-            while ( linha < tamConteudo & controlador & validadorLinha & (not (validar_fim(conteudo[linha]) ) ) ):
+                if (validador.validar_x(texto[caractere])):
+                    caractere+=1
 
-                texto = conteudo[linha]
-
-                if (validar_x(texto[caractere])):
-                    caractere=+1
-                    if (validar_igual(texto[caractere])):
-                        caractere=+1
-                        if (validar_hexa(numero)):
+                    if (validador.validar_igual(texto[caractere])):
+                        caractere+=1
+                        numero = tratador.tratar_numero(texto, caractere)
+                        
+                        if (validador.validar_hexa(numero)):
                             x = hex(numero)
                             conteudoHexadecimal[indiceConteudo] = conteudoHexadecimal[indiceConteudo] + x
+                        else:
+                            validadorSintaxe = False
+                    else:
+                        validadorSintaxe = False
+                elif (validador.validar_y(texto[caractere])):
+                    caractere+=1
 
-                    #123
-                elif (validar_y(texto[caractere])):
-                    caractere=+1
-                    if (validar_igual(texto[caractere])):
-                        caractere=+1
-                        if (validar_hexa(numero)):
+                    if (validador.validar_igual(texto[caractere])):
+                        caractere+=1
+                        numero = tratador.tratar_numero(texto, caractere)
+                        
+                        if (validador.validar_hexa(numero)):
                             y = hex(numero)
                             conteudoHexadecimal[indiceConteudo] = conteudoHexadecimal[indiceConteudo] + y
+                        else:
+                            validadorSintaxe = False
+                    else:
+                        validadorSintaxe = False
+                elif (validador.validar_operador(texto[caractere])):
 
-                    #123
-                elif (validar_operador(texto[caractere])):
-
-                    caractere=+1
-                    if (validar_igual(texto[caractere])):
-                        caractere=+1
-                        mnemonico = validar_mnemonico(mnemonico)
+                    caractere+=1
+                    
+                    if (validador.validar_igual(texto[caractere])):
+                        caractere+=1
+                        mnemonico = validador.validar_mnemonico(mnemonico)
+                        
                         if (mnemonico != -1):
                             conteudoHexadecimal[indiceConteudo] = conteudoHexadecimal[indiceConteudo] + mnemonico
+                        else:
+                            validadorSintaxe = False
+                    else:
+                        validadorSintaxe = False
+                elif (validador.validar_fim((linha, texto))):
+                    validadorSintaxe = True
                 else:
-                    controlador = False
-                    print("[ERRO] (linha %d) - Caractere %c Invalido.", linha, texto[caractere])
+                    validadorSintaxe = False
+                    print(f"[ERRO] (linha {linha}) - Caractere {texto[caractere]} Invalido.")
+            else:
+                validadorSintaxe = False
 
-                caractere = 0
-                linha+1
-                indiceConteudo+1
-                
-
-
-                
+            caractere = 0
+            linha+1
+            indiceConteudo+1
+ 
     if (validadorSintaxe == False):
         conteudoHexadecimal = []
 

@@ -5,33 +5,39 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
-def validar_inicio(texto):
+import mnemonicos
+
+def validar_inicio(linha):
     validacao = False
+
+    numero_linha, texto = linha
 
     if (texto == "inicio:"):
         validacao = True
     else:
-        print("[ERRO] - Texto de inicio %s invalido.", texto)
+        print(f"[ERRO] - linha ({numero_linha}) - Texto de inicio '{texto}' invalido.")
 
     return validacao
 
-def validar_fim(texto):
+def validar_fim(linha):
     validacao = False
 
-    if (texto == "fim"):
+    numero_linha, texto = linha
+
+    if (texto == "fim."):
         validacao = True
     else:
-        print("[ERRO] - Texto de finalizacao %s invalido.", texto)
+        print(f"[ERRO] - linha ({numero_linha}) - Texto de fim '{texto}' invalido.")
 
-    return validacao 
+    return validacao
 
 def validar_conteudo_vazio(conteudo):
     validacao = True
 
     if not (conteudo):
         validacao = False
-        print("[ERRO] - Conteudo do arquivo esta vazio!")
-        
+        print(f"[ERRO] - Conteudo do arquivo esta vazio!")
+
     return validacao 
 
 def validar_igual(texto):
@@ -40,7 +46,7 @@ def validar_igual(texto):
     if (texto == '='):
         validacao = True
     else:
-        print("[ERRO] - Necessario operador '=' apos variavel.")
+        print(f"[ERRO] - Necessario operador '=' apos variavel.")
 
     return validacao
 
@@ -68,7 +74,15 @@ def validar_operador(var):
 
     return validacao
 
+def validar_pontovirgula (caractere, linha):
+    validacao = False
+    
+    if (caractere == ';'):
+        validacao = True
+    else:
+        print(f"[ERRO] linha ({linha}) - Necessario caractere ';' ao fim de cada linha.")
 
+    return validacao
 
 def validar_valor_hexa(valor):
     validacao = False
@@ -79,4 +93,6 @@ def validar_valor_hexa(valor):
     return validacao
 
 def validar_mnemonico(texto):
-    case 
+    return mnemonicos.hash_mnemonicos.get(texto, -1)
+    
+
