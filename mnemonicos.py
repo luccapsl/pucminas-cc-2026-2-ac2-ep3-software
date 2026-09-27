@@ -5,21 +5,27 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
-hash_mnemonicos = {}
+# Arquivo para armazenar os mnemonicos do programa
 
-hash_mnemonicos[0] = "nA"
-hash_mnemonicos[1] = "AoBn"
-hash_mnemonicos[2] = "nAeB"
-hash_mnemonicos[3] = "zeroL"
-hash_mnemonicos[4] = "AeBn"
-hash_mnemonicos[5] = "nB"
-hash_mnemonicos[6] = "AxB"
-hash_mnemonicos[7] = "AenB"
-hash_mnemonicos[8] = "nAoB"
-hash_mnemonicos[9] = "AxBn"
-hash_mnemonicos[10] = "copiaB"
-hash_mnemonicos[11] = "AeB"
-hash_mnemonicos[12] = "umL"
-hash_mnemonicos[13] = "AonB"
-hash_mnemonicos[14] = "AoB"
-hash_mnemonicos[15] = "copiaA"
+# Dicionario contendo os mnemonicos e seus respectivos valores em hexadecimal
+hash_mnemonicos = {
+    "nA": 0,
+    "AoBn": 1,
+    "nAeB": 2,
+    "zeroL": 3,
+    "AeBn": 4,
+    "nB": 5,
+    "AxB": 6,
+    "AenB": 7,
+    "nAoB": 8,
+    "AxBn": 9,
+    "copiaB": 10,
+    "AeB": 11,
+    "umL": 12,
+    "AonB": 13,
+    "AoB": 14,
+    "copiaA": 15
+}
+
+# Variavel contendo a lista de mnemonicos para impressao
+print_lista_mnemonicos = "nA, AoBn, nAeB, zeroL, AeBn, nB, AxB, AenB, nAoB, AxBn, copiaB, AeB, umL, AonB, AoB, copiaA"

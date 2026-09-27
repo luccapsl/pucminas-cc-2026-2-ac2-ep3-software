@@ -1,37 +1,61 @@
 # ULA 4 bits — Software do PC
 
-Montador do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2.
+Montador do Exercício Prático 03 da disciplina de Arquitetura de Computadores 2 (Ciência da Computação, PUC Minas, 2026/2).
 
-Este repositório contém **apenas o lado PC**. O firmware do Arduino está em repositório separado, mantido pelos três integrantes responsáveis pelo hardware.
+**Grupo:** Ana Flávia, Clarisse de Assis, Jamille Micaele, Júlia Batista, Lucca de Paula.
+
+Este repositório contém **apenas o lado PC**. O firmware do Arduino (ULA, vetor memória, PC, DUMP e LEDs) está em repositório separado, mantido pelos integrantes responsáveis pelo hardware.
+
+## Contexto do exercício
+
+O sistema completo tem duas partes:
+
+1. **PC (este repositório):** lê o programa fonte `testeula.ula`, escrito com os mnemônicos da ULA, e gera o programa executável `testeula.hex`.
+2. **Arduino:** recebe o conteúdo do `testeula.hex` pela serial, carrega todas as instruções no vetor memória e só então as executa, uma a cada 4 segundos, mostrando o resultado nos LEDs dos pinos 13 (F3), 12 (F2), 11 (F1) e 10 (F0) e um DUMP da memória após cada instrução.
+
+O Arduino executa o `.hex`, nunca o `.ula`.
 
 ## O que este programa faz
 
-1. Lê o arquivo fonte `testeula.ula`, escrito com os mnemônicos da ULA.
-2. Detecta erros no fonte (sintaxe inválida e linhas em branco), reporta e **continua** a tradução.
-3. Traduz cada operação em uma palavra hexadecimal de 3 dígitos (`XYS`).
-4. Grava o resultado em `testeula.hex` e exibe o conteúdo na tela.
+1. Lê o arquivo `testeula.ula` da pasta atual e normaliza cada linha.
+2. Confere se o programa começa com `inicio:` e termina com `fim.`.
+3. Interpreta as atribuições `X=` e `Y=` e mantém o valor vigente de cada uma.
+4. Traduz cada `W=<mnemônico>;` em uma palavra hexadecimal de 3 dígitos (`XYS`).
+5. Grava o resultado em `testeula.hex`, uma instrução por linha.
 
-O programa **não se comunica com o Arduino**. Sua única saída é o arquivo `testeula.hex`, que é levado ao Arduino manualmente pelo Monitor Serial. O Arduino executa o `.hex`, nunca o `.ula`.
+O programa **não se comunica com o Arduino**. Sua única saída é o arquivo `testeula.hex`, levado ao Arduino manualmente pelo Monitor Serial.
 
 ## Requisitos
 
-- Python 3.10 ou superior
+- Python 3
 - Nenhuma biblioteca externa
 
 ## Uso
 
 ```bash
-python montador.py testeula.ula
+python3 main.py
 ```
 
-Sem argumento, o programa procura `testeula.ula` na pasta atual. A saída é sempre gravada como `testeula.hex`, na mesma pasta.
+O programa não recebe argumentos. Os nomes dos arquivos de entrada e saída estão fixos em [variaveis.py](variaveis.py) (`testeula.ula` e `testeula.hex`), como exige a especificação, e são procurados na pasta onde o comando é executado.
+
+Exemplo de saída no console:
+
+```
+[INFO] - Inicio do programa de montagem de arquivo .ula para .hex
+
+[INFO] - Leitura do arquivo testeula.ula realizada com sucesso.
+
+[INFO] - Montagem do conteudo hexadecimal realizada com sucesso.
+
+[INFO] - Escrita do arquivo testeula.hex realizada com sucesso.
+```
 
 ## Como levar o .hex ao Arduino
 
 1. Abra o Monitor Serial da IDE do Arduino, com o firmware do grupo já gravado na placa.
 2. Ajuste o baud rate e o terminador de linha conforme definido no repositório do Arduino.
-3. Abra o `testeula.hex` (ou copie o conteúdo exibido na tela pelo montador).
-4. Selecione **todo** o conteúdo, cole no campo "Enviar" e envie de uma vez.
+3. Abra o `testeula.hex` e copie **todo** o conteúdo.
+4. Cole no campo "Enviar" e envie de uma vez.
 
 A especificação exige que a carga seja feita em bloco único. Não se digita uma instrução de cada vez.
 
@@ -39,13 +63,26 @@ A especificação exige que a carga seja feita em bloco único. Não se digita u
 
 ```
 .
-├── montador.py     # ponto de entrada: orquestra leitura, tradução e gravação
-├── tradutor.py     # leitura do fonte, estado de X e Y, tabela de mnemônicos
-├── validador.py    # detecção e relato dos erros do fonte
-├── saida.py        # gravação do testeula.hex e exibição na tela
-├── testeula.ula    # fonte de teste do grupo (cobre as 16 instruções e os 2 erros)
-├── testeula.hex    # saída gerada
+├── main.py            # ponto de entrada: orquestra leitura, montagem e gravação
+├── gestao_arquivo.py  # leitura do .ula e escrita do .hex
+├── tratador.py        # limpeza das linhas, extração de números e mnemônicos, conversão para hexa
+├── validador.py       # validações: inicio/fim, variáveis, '=', ';', faixa de 4 bits, mnemônico
+├── montador.py        # percorre o fonte, mantém X e Y e monta as palavras XYS
+├── mnemonicos.py      # tabela dos 16 mnemônicos e seus códigos
+├── variaveis.py       # nomes dos arquivos e listas globais de conteúdo
+├── testeula.ula       # fonte de teste do grupo
+├── testeula.hex       # saída gerada
 └── README.md
+```
+
+### Fluxo de execução
+
+```
+main.py
+ ├─ gestao_arquivo.ler_arquivo_ula()   → lista de linhas já limpas (tratador.limpeza_texto_linha)
+ ├─ validador.validar_conteudo_vazio() → aborta se o arquivo não existe ou está vazio
+ ├─ montador.montagem_texto_hexa()     → valida linha a linha e preenche conteudoHexadecimal
+ └─ gestao_arquivo.escrever_arquivo_hex() → grava testeula.hex
 ```
 
 ## Formato do fonte (.ula)
@@ -66,11 +103,14 @@ fim.
 
 Regras:
 
-- `X=` e `Y=` recebem valores **decimais** de 0 a 15 e **não geram linha no .hex**. Apenas atualizam o estado interno do montador.
+- A primeira linha deve ser `inicio:` e a última, `fim.`.
+- `X=` e `Y=` recebem valores **decimais** de 0 a 15 e **não geram linha no `.hex`**. Apenas atualizam o estado interno do montador.
 - `W=<mnemônico>;` gera uma linha no `.hex`, usando os valores de X e Y vigentes naquele momento.
-- X e Y permanecem válidos até uma nova atribuição. É por isso que dez linhas de fonte produzem quatro linhas de saída.
+- X e Y permanecem válidos até uma nova atribuição. É por isso que as dez linhas de instrução do exemplo produzem quatro linhas de saída.
 - X e Y iniciam em 0 caso uma operação apareça antes de qualquer atribuição.
-- `inicio:` e `fim.` delimitam o programa.
+- Toda linha entre `inicio:` e `fim.` deve terminar em `;`.
+- Espaços e finais de linha (`\n`, `\r`) são removidos antes da análise, então `X = 12 ;` é aceito.
+- Os mnemônicos são comparados por igualdade exata com a tabela, diferenciando maiúsculas de minúsculas.
 
 ## Conjunto de instruções
 
@@ -93,7 +133,7 @@ Regras:
 | A + B | `AoB` | E |
 | A | `copiaA` | F |
 
-As operações são sempre realizadas sobre X e Y, e o resultado vai para W.
+As operações são sempre realizadas sobre X e Y, e o resultado vai para W. A tabela está em [mnemonicos.py](mnemonicos.py).
 
 ## Formato da saída (.hex)
 
@@ -110,58 +150,76 @@ Leitura de cada palavra: primeiro dígito = X, segundo = Y, terceiro = S (instru
 
 ### Rastreamento do exemplo acima
 
-| Linha do fonte | X | Y | S | Saída |
+| Linhas do fonte | X | Y | S | Saída |
 |---|---|---|---|---|
 | `X=12; Y=6; W=AeB;` | 12 → C | 6 → 6 | `AeB` → B | `C6B` |
 | `X=10; Y=3; W=AoB;` | 10 → A | 3 → 3 | `AoB` → E | `A3E` |
 | `W=AeBn;` | A (mantido) | 3 (mantido) | `AeBn` → 4 | `A34` |
 | `X=13; W=nB;` | 13 → D | 3 (mantido) | `nB` → 5 | `D35` |
 
-Executando `C6B` no Arduino: X = 1100, Y = 0110, S = 1011 (`AeB`, o "e" das entradas). O resultado é 0100, ou seja W = 4, com o LED do pino 12 aceso.
+### Execução no Arduino
+
+Com `C6B`: X = 1100, Y = 0110, S = 1011 (`AeB`, o "e" das entradas). O resultado é 0100, ou seja W = 4, com o LED do pino 12 aceso.
+
+Com `A3E` em seguida: X = 1010, Y = 0011, S = 1110 (`AoB`). O resultado é 1011, ou seja W = B, com os LEDs dos pinos 13, 11 e 10 acesos.
+
+DUMP esperado do vetor memória (`PC | W | X | Y | instruções...`) para esse programa de duas instruções:
+
+```
+- >| 4 | 0 | 0 | 0 | C6B | A3E |    carga do vetor
+- >| 5 | 4 | C | 6 | C6B | A3E |    após a 1ª instrução
+- >| 6 | B | A | 3 | C6B | A3E |    após a 2ª instrução
+```
 
 ## Tratamento de erros
 
-O montador detecta os dois erros previstos na especificação. Em ambos os casos o erro é **relatado e a tradução prossegue** — nunca há interrupção.
+Mensagens emitidas pela versão atual:
 
-**Linha em branco**
+| Situação | Mensagem |
+|---|---|
+| Arquivo `.ula` não encontrado | `[ERRO] - Arquivo com nome testeula.ula nao foi encontrado. Leitura impossivel de ser realizada.` |
+| Arquivo vazio | `[ERRO] - Conteudo do arquivo esta vazio!` |
+| Primeira linha diferente de `inicio:` | `[ERRO] - linha (0) - Texto de inicio '...' invalido.` |
+| Linha sem `;` (inclui linha em branco) | `[ERRO] (linha N) - Conteudo '...' invalido. Erro de sintaxe.` |
+| Variável diferente de `X`, `Y` ou `W` | `[ERRO] (linha N) - Caractere ... Invalido.` |
+| Falta `=` após a variável | `[ERRO] - Necessario operador '=' apos variavel.` |
+| Mnemônico inexistente | `[ERRO] (linha N) - Mnemonico ... Invalido.` seguido da lista de mnemônicos válidos |
 
-```
-[AVISO] linha 7: linha em branco ignorada
-```
+Também é validada a faixa de 4 bits (0 a 15) dos valores de X e Y.
 
-**Sintaxe ou mnemônico inválido**
-
-```
-[ERRO] linha 9: mnemonico desconhecido 'AeZ' — linha ignorada
-[ERRO] linha 12: sintaxe invalida 'X=5' — falta ponto e virgula
-```
-
-Linhas com erro não geram código e não ocupam posição no vetor memória do Arduino. Ao final, o montador imprime um resumo com a contagem de erros e o número de instruções geradas.
-
-Também são tratados como erro os valores fora da faixa de 4 bits, como `X=20`.
-
-O parser normaliza espaços, tabulações e finais de linha `CRLF` antes de analisar cada linha, e compara os mnemônicos por igualdade completa — `nA` e `nAoB` não se confundem.
-
-O número de linha informado nas mensagens é sempre o do arquivo `.ula` original, e não tem relação com a posição da instrução na memória do Arduino.
+Na versão atual, **o primeiro erro interrompe a montagem**: o conteúdo já traduzido é descartado e o `testeula.hex` não é gravado (`[ERRO] - Montagem do arquivo .hex nao realizada devido a erros de sintaxe.`). Isso ainda não atende à especificação — ver [Pendências](#pendências-em-relação-à-especificação).
 
 ## Arquivo de teste
 
-O `testeula.ula` deste repositório cobre:
+O `testeula.ula` atual contém o exemplo da especificação (Figura 3) acrescido de repetições de `W=nB;`, cobrindo o reaproveitamento de X e Y sem reatribuição.
+
+A especificação pede que o arquivo de teste do grupo cubra:
 
 - as 16 instruções da tabela;
 - reaproveitamento de X e Y sem reatribuição;
 - `zeroL` e `umL`, que ignoram as entradas;
-- uma linha em branco no meio do programa;
-- um mnemônico inexistente;
-- uma linha com sintaxe quebrada.
+- uma ou mais linhas em branco no meio do programa;
+- instruções com sintaxe errada.
 
 O arquivo usado na avaliação é outro e só será conhecido no momento da apresentação.
+
+## Pendências em relação à especificação
+
+- [ ] **Erros não podem interromper a tradução.** A especificação exige que linhas em branco e instruções com sintaxe errada sejam informadas e que a carga continue normalmente (item 7 dos critérios de perda de pontos). Hoje o montador para no primeiro erro e não grava o `.hex`.
+- [ ] **Linha em branco** deve gerar um aviso próprio e ser ignorada; hoje ela cai no erro genérico de sintaxe.
+- [ ] **`X=` ou `Y=` sem número** (ex.: `X=;`) provoca exceção (`int('')`) em `tratador.tratar_numero`, encerrando o programa.
+- [ ] **Valor fora da faixa** (ex.: `X=20;`) interrompe a montagem sem exibir mensagem.
+- [ ] **`inicio:` ausente** exibe o erro, mas o fluxo segue como sucesso e grava um `.hex` vazio.
+- [ ] **Linha em branco após `fim.`** é tratada como erro, porque `fim.` precisa ser a última linha da lista.
+- [ ] **Tabulações** não são removidas por `tratador.limpeza_texto_linha` (apenas espaços, `\n` e `\r`).
+- [ ] **Exibir o conteúdo do `.hex` na tela** ao final, pronto para copiar, e um resumo com a contagem de erros e de instruções geradas.
+- [ ] **Arquivo de teste** cobrindo as 16 instruções e os dois tipos de erro.
 
 ## Divisão de trabalho (lado PC)
 
 ### Lucca — Etapas 1 e 2
 
-**Etapa 1 — Tradutor (`tradutor.py`)**
+**Etapa 1 — Leitura e tradução (`gestao_arquivo.py`, `tratador.py`, `montador.py`, `mnemonicos.py`)**
 
 - Abertura e leitura do `.ula`, com numeração das linhas a partir de 1
 - Normalização de espaços, tabulações e `CRLF`
@@ -178,20 +236,25 @@ O arquivo usado na avaliação é outro e só será conhecido no momento da apre
 - Variável desconhecida à esquerda do `=`
 - Mnemônico inexistente
 - Valor fora da faixa de 4 bits
-- Padronização das mensagens `[ERRO]` / `[AVISO]`
+- Padronização das mensagens `[ERRO]` / `[AVISO]` / `[INFO]`
 - Garantia de que nenhum erro interrompe a tradução
 
 ### Clarisse — Etapas 3 e 4
 
-**Etapa 3 — Saída (`saida.py` e `montador.py`)**
+**Etapa 3 — Pendências e correções (todos os módulos)**
 
-- Orquestração do fluxo em `montador.py`: leitura, tradução, validação, gravação
-- Argumento de linha de comando com o caminho do `.ula`
-- Gravação do `testeula.hex` no formato exato combinado com o Arduino
-- Exibição do conteúdo gerado na tela, pronto para copiar e colar
+- Resolução de todas as [pendências em relação à especificação](#pendências-em-relação-à-especificação), de acordo com o `EP03_2026_2.pdf`
+- Correção do que ainda resta no código do lado PC, em especial:
+  - erros relatados sem interromper a tradução nem a gravação do `.hex`;
+  - aviso próprio para linha em branco;
+  - tratamento de `X=`/`Y=` sem número e de valores fora da faixa, com mensagem;
+  - fluxo correto quando falta `inicio:` ou há linhas após `fim.`;
+  - remoção de tabulações na normalização;
+  - ajuste dos nomes invertidos de `validar_x` / `validar_y`
+- Exibição do conteúdo do `.hex` na tela, pronto para copiar e colar
 - Resumo final com contagem de erros e de instruções geradas
 
-**Etapa 4 — Arquivo de teste (`testeula.ula`)**
+**Etapa 4 — Cobertura de testes e conferência (`testeula.ula`)**
 
 - Cobertura das 16 instruções da tabela
 - Reaproveitamento de X e Y sem reatribuição
@@ -202,8 +265,8 @@ O arquivo usado na avaliação é outro e só será conhecido no momento da apre
 
 ### Regras comuns
 
-- **Contrato entre as etapas:** Lucca entrega a lista de palavras `XYS` e a lista de erros; Clarisse grava e exibe. O formato dessas duas listas é combinado entre os dois antes de começar e não muda depois.
-- **Formato de linha do `.hex`:** acertado por Clarisse com o responsável pela memória do Arduino, já que ela é quem grava o arquivo.
+- **Contrato entre as etapas:** a montagem entrega a lista de palavras `XYS` (`conteudoHexadecimal`, em [variaveis.py](variaveis.py)) e a lista de erros; a saída grava e exibe. O formato dessas listas é combinado antes de começar e não muda depois.
+- **Formato de linha do `.hex`:** acertado com o responsável pela memória do Arduino.
 - Cada um comenta o próprio código; comentários são critério explícito de nota.
 - Cada um revisa o código do outro antes de a etapa ser considerada pronta.
-- Ambos treinam o rastreamento completo de `C6B`, do fonte `.ula` até os LEDs acesos. A entrevista é aleatória e nenhuma parte do fluxo pode ser desconhecida por qualquer um dos dois.
+- Ambos treinam o rastreamento completo de `C6B`, do fonte `.ula` até os LEDs acesos. A avaliação é individual, durante a apresentação, e nenhuma parte do fluxo pode ser desconhecida por qualquer um dos dois.

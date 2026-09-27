@@ -5,6 +5,8 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
+# Arquivo que armazena as funcoes de tratamento do conteudo do arquivo .ula
+
 import os
 
 def limpeza_texto_linha(texto):
@@ -40,3 +42,36 @@ def tratar_numero(texto, caractere):
         caractere += 1
 
     return int(numero)
+
+def converter_hexadecimal(numero):
+    """ Recebe um numero e converte para hexadecimal seguindo o padrao 1 ... 9, A,B,C,D,E,F
+
+    Args:
+        numero: inteiro contendo o numero
+
+    Returns:
+        numero convertido para hexadecimal
+    """
+
+    return hex(numero).replace("0x", "").upper()
+
+    
+
+def tratar_mnemonico(texto, caractere):
+    """ Recebe um texto e o numero do caractere e trata o mnemonico que vem depois do caractere
+
+    Args:
+        texto: string contendo o texto
+        caractere: inteiro contendo o indice do caractere
+
+    Returns:
+        mnemonico tratado
+    """
+
+    mnemonico = ''
+
+    while (caractere < len(texto) and texto[caractere].isalpha()):
+        mnemonico += texto[caractere]
+        caractere += 1
+
+    return mnemonico

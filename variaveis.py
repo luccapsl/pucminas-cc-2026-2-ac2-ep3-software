@@ -27,3 +27,8 @@ conteudo = []
 
 nomeArquivo_hex = "testeula.hex"
 
+# ---------------------------
+# Conteudo de .hex
+# ---------------------------
+
+conteudoHexadecimal = []

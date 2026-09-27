@@ -5,11 +5,13 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
+# Arquivo para realizar a leitura e escrita dos arquivos .ula e .hex
+
 import os
 import tratador
 import validador
 import montador
-from variaveis import nomeArquivo_hex, nomeArquivo_ula, conteudo
+from variaveis import nomeArquivo_hex, nomeArquivo_ula, conteudo, conteudoHexadecimal
 
 def ler_arquivo_ula(nomeArquivo_ula):
     """ Faz a leitura do arquivo .ula, enumera cada linha e salva em uma variavel vetorizada
@@ -25,16 +27,16 @@ def ler_arquivo_ula(nomeArquivo_ula):
     if (os.path.exists(nomeArquivo_ula)):
         with open(nomeArquivo_ula, "r", encoding="utf-8") as arquivo:
             for num_linha, texto_linha in enumerate(arquivo, start=1):
-                conteudo.append((num_linha, tratador.limpeza_texto_linha(texto_linha)))
+                conteudo.append(tratador.limpeza_texto_linha(texto_linha))
 
-        print("[INFO] - Leitura do arquivo %s realizada com sucesso." % nomeArquivo_ula)
+        print("[INFO] - Leitura do arquivo %s realizada com sucesso.\n" % nomeArquivo_ula)
     else:
-        print("[ERRO] - Arquivo com nome %s nao foi encontrado. Leitura impossivel de ser realizada." % nomeArquivo_ula)
+        print("[ERRO] - Arquivo com nome %s nao foi encontrado. Leitura impossivel de ser realizada.\n" % nomeArquivo_ula)
 
     return conteudo
 
 
-def escrever_arquivo_hex(nomeArquivo_hex, conteudoHexadecimal):
+def escrever_arquivo_hex(nomeArquivo_hex):
     """ Faz a escrita do arquivo .hex, com o conteudo hexadecimal
 
     Args:
@@ -49,4 +51,4 @@ def escrever_arquivo_hex(nomeArquivo_hex, conteudoHexadecimal):
         for linha in conteudoHexadecimal:
             arquivo.write(linha + "\n")
 
-    print("[INFO] - Escrita do arquivo %s realizada com sucesso." % nomeArquivo_hex)
+    print("[INFO] - Escrita do arquivo %s realizada com sucesso.\n" % nomeArquivo_hex)
