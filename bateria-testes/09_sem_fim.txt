@@ -1,0 +1,23 @@
+TESTE 09_sem_fim.ula
+============================================================
+
+OBJETIVO: Programa sem a linha 'fim.'.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- O erro e informado ao final e o .hex e gravado mesmo assim.
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - O programa nao possui um 'fim.' valido.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 2
+Quantidade de erros: 1
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+446
+449

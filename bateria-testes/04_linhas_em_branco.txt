@@ -1,0 +1,34 @@
+TESTE 04_linhas_em_branco.ula
+============================================================
+
+OBJETIVO: Linhas em branco em varias posicoes.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Uma linha em branco isolada (linha 3).
+- Varias linhas em branco seguidas (linhas 6 a 8).
+- Linha so com espacos (linha 10) e so com TAB (linha 11) contam como em branco.
+- Linha em branco depois de 'fim.' (linha 15).
+- Nenhuma delas interrompe a montagem.
+
+MENSAGENS ESPERADAS
+-------------------
+[AVISO] - (linha 3) - Linha em branco sera ignorada.
+[AVISO] - (linha 6) - Linha em branco sera ignorada.
+[AVISO] - (linha 7) - Linha em branco sera ignorada.
+[AVISO] - (linha 8) - Linha em branco sera ignorada.
+[AVISO] - (linha 10) - Linha em branco sera ignorada.
+[AVISO] - (linha 11) - Linha em branco sera ignorada.
+[AVISO] - (linha 15) - Linha em branco sera ignorada.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 3
+Quantidade de erros: 0
+Quantidade de avisos: 7
+
+testeula.hex ESPERADO
+---------------------
+35E
+35B
+856

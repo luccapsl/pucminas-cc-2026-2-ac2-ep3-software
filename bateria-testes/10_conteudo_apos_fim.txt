@@ -1,0 +1,27 @@
+TESTE 10_conteudo_apos_fim.ula
+============================================================
+
+OBJETIVO: Conteudo depois de 'fim.'.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Comandos depois de 'fim.' sao informados e ignorados (W=AeB nao gera linha).
+- Linha em branco depois de 'fim.' gera apenas aviso.
+- Um segundo 'fim.' tambem e informado como erro.
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - (linha 6) - Conteudo 'W=AeB;' depois de 'fim.' sera ignorado.
+[AVISO] - (linha 7) - Linha em branco sera ignorada.
+[ERRO] - (linha 8) - Conteudo 'X=1;' depois de 'fim.' sera ignorado.
+[ERRO] - (linha 9) - Conteudo 'fim.' depois de 'fim.' sera ignorado.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 1
+Quantidade de erros: 3
+Quantidade de avisos: 1
+
+testeula.hex ESPERADO
+---------------------
+A5E

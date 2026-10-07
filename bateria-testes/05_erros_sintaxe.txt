@@ -1,0 +1,50 @@
+TESTE 05_erros_sintaxe.ula
+============================================================
+
+OBJETIVO: Todas as variacoes de sintaxe errada.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Falta de ';', falta de '=', '=' duplicado, valor vazio, valor hexadecimal, negativo e fora da faixa.
+- Variavel desconhecida (Z) e minuscula (x).
+- Mnemonico inexistente, em minusculas, em maiusculas, com digito e ausente.
+- Linha sem variavel ('copiaA;').
+- Depois de todos os erros, X e Y continuam valendo 7 e 2: o ultimo W=AeB gera 72B.
+- Observacao: 'X=;' (linha 8) e 'W=;' (linha 20) mostram "Necessario operador '='" em vez de "valor/mnemonico ausente" (comportamento atual do codigo).
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - (linha 5) - Conteudo 'X=13' invalido. Erro de sintaxe.
+[ERRO] - (linha 6) - Necessario operador '=' apos X.
+[ERRO] - (linha 7) - Valor de X '=3' invalido.
+[ERRO] - (linha 8) - Necessario operador '=' apos X.
+[ERRO] - (linha 9) - Valor de X 'A' invalido.
+[ERRO] - (linha 10) - Valor de X '-1' invalido.
+[ERRO] - (linha 11) - Valor de X '16' fora da faixa permitida de 0 a 15.
+[ERRO] - (linha 12) - Valor de X '99' fora da faixa permitida de 0 a 15.
+[ERRO] - (linha 13) - Valor de Y '1a' invalido.
+[ERRO] - (linha 14) - Variavel ou instrucao invalida: 'Z=3;'.
+[ERRO] - (linha 15) - Variavel ou instrucao invalida: 'x=3;'.
+[ERRO] - (linha 16) - Mnemonico AeZ invalido.
+A lista de mnemonicos validos e: nA, AoBn, nAeB, zeroL, AeBn, nB, AxB, AenB, nAoB, AxBn, copiaB, AeB, umL, AonB, AoB, copiaA
+[ERRO] - (linha 17) - Mnemonico aeb invalido.
+A lista de mnemonicos validos e: nA, AoBn, nAeB, zeroL, AeBn, nB, AxB, AenB, nAoB, AxBn, copiaB, AeB, umL, AonB, AoB, copiaA
+[ERRO] - (linha 18) - Mnemonico AEB invalido.
+A lista de mnemonicos validos e: nA, AoBn, nAeB, zeroL, AeBn, nB, AxB, AenB, nAoB, AxBn, copiaB, AeB, umL, AonB, AoB, copiaA
+[ERRO] - (linha 19) - Mnemonico AeB1 invalido.
+A lista de mnemonicos validos e: nA, AoBn, nAeB, zeroL, AeBn, nB, AxB, AenB, nAoB, AxBn, copiaB, AeB, umL, AonB, AoB, copiaA
+[ERRO] - (linha 20) - Necessario operador '=' apos W.
+[ERRO] - (linha 21) - Necessario operador '=' apos W.
+[ERRO] - (linha 22) - Conteudo 'X=' invalido. Erro de sintaxe.
+[ERRO] - (linha 23) - Variavel ou instrucao invalida: 'copiaA;'.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 2
+Quantidade de erros: 19
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+72E
+72B

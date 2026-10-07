@@ -1,0 +1,16 @@
+TESTE 12_arquivo_vazio.ula
+============================================================
+
+OBJETIVO: Arquivo .ula completamente vazio.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Unico caso em que o testeula.hex NAO e gerado.
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - Conteudo do arquivo esta vazio!
+
+testeula.hex ESPERADO
+---------------------
+(arquivo nao e gerado)

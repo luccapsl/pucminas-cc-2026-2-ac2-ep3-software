@@ -1,0 +1,34 @@
+TESTE 03_reaproveitamento_xy.ula
+============================================================
+
+OBJETIVO: Valores iniciais, extremos (0 e 15) e reaproveitamento de X e Y.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- W antes de qualquer atribuicao usa X=0 e Y=0 (00F).
+- Alterar so X ou so Y mantem o outro valor.
+- Valores extremos 0 e 15 (F).
+- Instrucao repetida gera linhas repetidas (956 duas vezes).
+
+MENSAGENS ESPERADAS
+-------------------
+(nenhum erro ou aviso)
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 10
+Quantidade de erros: 0
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+00F
+F0F
+FFB
+0FE
+0F5
+00C
+003
+906
+956
+956

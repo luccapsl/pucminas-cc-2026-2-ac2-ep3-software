@@ -1,0 +1,24 @@
+TESTE 08_inicio_invalido.ula
+============================================================
+
+OBJETIVO: 'inicio:' escrito errado ('Inicio:', com I maiusculo).
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Gera dois erros na linha 1: inicio invalido e, ao ser tratada como comando, erro de sintaxe (sem ';').
+- O restante do programa e traduzido normalmente.
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - (linha 1) - Texto de inicio 'Inicio:' invalido.
+[ERRO] - (linha 1) - Conteudo 'Inicio:' invalido. Erro de sintaxe.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 1
+Quantidade de erros: 2
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+120

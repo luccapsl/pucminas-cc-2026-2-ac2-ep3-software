@@ -1,0 +1,24 @@
+TESTE 07_sem_inicio.ula
+============================================================
+
+OBJETIVO: Programa sem a linha 'inicio:'.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- O erro e informado e a linha 1 (X=12;) e traduzida normalmente.
+- O .hex e gravado.
+
+MENSAGENS ESPERADAS
+-------------------
+[ERRO] - (linha 1) - Texto de inicio 'X=12;' invalido.
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 2
+Quantidade de erros: 1
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+C6B
+C6E

@@ -1,0 +1,25 @@
+TESTE 06_espacos_tabs_crlf.ula
+============================================================
+
+OBJETIVO: Espacos e TABs no meio das linhas e finais de linha do Windows (CRLF).
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- ' X = 12 ;', 'Y<TAB>=<TAB>6' e 'W = A e B ;' sao lidos como X=12;, Y=6; e W=AeB;.
+- ' fim. ' com espacos ainda e reconhecido.
+- O arquivo foi salvo com CRLF (\r\n) de proposito; nao edite e salve com LF.
+
+MENSAGENS ESPERADAS
+-------------------
+(nenhum erro ou aviso)
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 2
+Quantidade de erros: 0
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+C6B
+C6F

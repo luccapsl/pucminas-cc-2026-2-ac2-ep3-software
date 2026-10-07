@@ -1,0 +1,58 @@
+TESTE 02_todas_instrucoes.ula
+============================================================
+
+OBJETIVO: As 16 instrucoes da ULA com X=12 (1100) e Y=10 (1010).
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Cada mnemonico gera o codigo S correto (0 a F).
+- Os valores de W sao todos diferentes, o que facilita a conferencia nos LEDs.
+
+MENSAGENS ESPERADAS
+-------------------
+(nenhum erro ou aviso)
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 16
+Quantidade de erros: 0
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+CA0
+CA1
+CA2
+CA3
+CA4
+CA5
+CA6
+CA7
+CA8
+CA9
+CAA
+CAB
+CAC
+CAD
+CAE
+CAF
+
+CONFERENCIA NO ARDUINO (X = 1100, Y = 1010)
+-------------------------------------------
+Palavra  Mnemonico  W (bin)  W   LEDs acesos (pinos)
+CA0      nA         0011     3   11, 10
+CA1      AoBn       0001     1   10
+CA2      nAeB       0010     2   11
+CA3      zeroL      0000     0   nenhum
+CA4      AeBn       0111     7   12, 11, 10
+CA5      nB         0101     5   12, 10
+CA6      AxB        0110     6   12, 11
+CA7      AenB       0100     4   12
+CA8      nAoB       1011     B   13, 11, 10
+CA9      AxBn       1001     9   13, 10
+CAA      copiaB     1010     A   13, 11
+CAB      AeB        1000     8   13
+CAC      umL        1111     F   13, 12, 11, 10
+CAD      AonB       1101     D   13, 12, 10
+CAE      AoB        1110     E   13, 12, 11
+CAF      copiaA     1100     C   13, 12

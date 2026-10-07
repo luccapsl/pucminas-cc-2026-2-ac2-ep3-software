@@ -1,0 +1,33 @@
+TESTE 01_exemplo_pdf.ula
+============================================================
+
+OBJETIVO: Exemplo exato da Figura 3 da especificacao.
+
+O QUE ESTE TESTE VERIFICA
+-------------------------
+- Programa sem erros.
+- X e Y mantidos entre instrucoes (W=AeBn reaproveita X=A e Y=3).
+
+MENSAGENS ESPERADAS
+-------------------
+(nenhum erro ou aviso)
+
+RESUMO ESPERADO
+---------------
+Quantidade de instrucoes geradas: 4
+Quantidade de erros: 0
+Quantidade de avisos: 0
+
+testeula.hex ESPERADO
+---------------------
+C6B
+A3E
+A34
+D35
+
+CONFERENCIA NO ARDUINO
+----------------------
+C6B -> W = 0100 (4) -> LED do pino 12
+A3E -> W = 1011 (B) -> LEDs dos pinos 13, 11 e 10
+A34 -> W = 1101 (D) -> LEDs dos pinos 13, 12 e 10
+D35 -> W = 1100 (C) -> LEDs dos pinos 13 e 12
