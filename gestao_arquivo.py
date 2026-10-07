@@ -24,6 +24,8 @@ def ler_arquivo_ula(nomeArquivo_ula):
         formato: [(num_linha, 'texto_linha'), ..., (num_linha, 'texto_linha')]
     """
 
+    conteudo.clear()
+
     if (os.path.exists(nomeArquivo_ula)):
         with open(nomeArquivo_ula, "r", encoding="utf-8") as arquivo:
             for num_linha, texto_linha in enumerate(arquivo, start=1):

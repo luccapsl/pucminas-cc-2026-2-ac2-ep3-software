@@ -22,9 +22,6 @@ def validar_inicio(texto):
 
     if (texto == "inicio:"):
         validacao = True
-    else:
-        print(f"[ERRO] - linha ({0}) - Texto de inicio '{texto}' invalido.\n")
-
     return validacao
 
 def validar_fim(texto):
@@ -128,12 +125,11 @@ def validar_operador(var):
 
     return validacao
 
-def validar_pontovirgula (texto, linha):
+def validar_pontovirgula(texto):
     """Funcao que valida se o texto contem o operador ';'.
     
     Args:
         texto: string contendo o texto a ser validado
-        linha: inteiro contendo o numero da linha do texto a ser validado
 
     Returns:
         validacao: booleano indicando se o texto contem o operador ';'

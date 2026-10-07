@@ -1,77 +1,194 @@
-#----------------------------------#
+# ---------------------------------- #
 # Exercicio Pratico 3
 # Arquitetura de Computadores 2
 # Ciencia da Computacao 2026/2 - PUC Minas
-# Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
-# ----------------------------------#
+# Ana Flavia, Clarisse de Assis, Jamille Micaele,
+# Julia Batista, Lucca de Paula
+# ---------------------------------- #
 
-# Arquivo que armazena as funcoes de tratamento do conteudo do arquivo .ula
+# Arquivo responsavel por realizar tratamentos simples
+# no conteudo lido do arquivo .ula.
+#
+# Este modulo NAO decide se uma linha esta correta ou errada.
+# Essa responsabilidade pertence ao validador.py.
+#
+# Aqui ficam apenas funcoes auxiliares, como:
+# - limpeza das linhas;
+# - extracao de numeros;
+# - conversao decimal para hexadecimal;
+# - extracao de mnemonicos.
 
-import os
 
 def limpeza_texto_linha(texto):
-    """ Recebe um texto e faz a limpeza dos '\n', '\r', e espacos vazios
+    """
+    Recebe uma linha do arquivo .ula e remove caracteres
+    que podem atrapalhar a analise sintatica.
+
+    Sao removidos:
+    - '\n' -> quebra de linha;
+    - '\r' -> retorno de carro, comum em arquivos Windows;
+    - ' '  -> espacos;
+    - '\t' -> tabulacoes.
+
+    Exemplo:
+
+        " X = 12;\\n"
+
+    torna-se:
+
+        "X=12;"
 
     Args:
-        texto: string contendo o texto
+        texto: string contendo a linha original.
 
     Returns:
-        texto limpo
+        String limpa.
     """
 
-    texto = texto.replace('\n','')
-    texto = texto.replace('\r','')
-    texto = texto.replace(' ','')
+    # Remove a quebra de linha.
+    texto = texto.replace('\n', '')
+
+    # Remove o retorno de carro.
+    # Isso evita problemas quando o arquivo utiliza CRLF.
+    texto = texto.replace('\r', '')
+
+    # Remove espacos comuns.
+    texto = texto.replace(' ', '')
+
+    # Remove tabulacoes.
+    # Isso tambem foi incluido para tornar a leitura
+    # mais robusta.
+    texto = texto.replace('\t', '')
 
     return texto
 
+
 def tratar_numero(texto, caractere):
-    """ Recebe um texto e um caractere e trata o numero que vem depois do caractere
+    """
+    Recebe um texto e a posicao inicial onde deve procurar
+    um numero.
+
+    A funcao percorre o texto enquanto encontrar digitos
+    numericos e monta uma string contendo esse numero.
+
+    Exemplo:
+
+        texto = "X=123;"
+        caractere = 2
+
+    Resultado:
+
+        123
+
+    Se nao houver nenhum numero na posicao indicada,
+    retorna None.
+
+    Isso e importante para casos como:
+
+        X=;
+        Y=;
+
+    pois nessas situacoes nao devemos tentar fazer
+    int(''), o que causaria uma excecao.
 
     Args:
-        texto: string contendo o texto
-        caractere: inteiro contendo o indice do caractere
+        texto: string contendo o texto.
+        caractere: indice inicial da procura.
 
     Returns:
-        numero tratado
+        Inteiro contendo o numero encontrado ou None.
     """
 
     numero = ''
+
+    # Continua enquanto:
+    # 1. o indice estiver dentro do texto;
+    # 2. o caractere atual for um digito.
     while (caractere < len(texto) and texto[caractere].isdigit()):
+
+        # Adiciona o digito encontrado ao numero.
         numero += texto[caractere]
+
+        # Avanca para o proximo caractere.
         caractere += 1
 
+    # Se nenhum digito foi encontrado,
+    # nao existe numero para retornar.
+    if numero == '':
+        return None
+
+    # Converte a string numerica para inteiro.
     return int(numero)
 
+
 def converter_hexadecimal(numero):
-    """ Recebe um numero e converte para hexadecimal seguindo o padrao 1 ... 9, A,B,C,D,E,F
+    """
+    Recebe um numero inteiro decimal e converte para
+    hexadecimal.
+
+    A funcao hex() do Python retorna, por exemplo:
+
+        hex(10) -> '0xa'
+
+    Como o projeto precisa apenas do numero hexadecimal,
+    removemos o prefixo '0x' e transformamos as letras
+    em maiusculas.
+
+    Exemplos:
+
+        10 -> A
+        11 -> B
+        12 -> C
+        13 -> D
+        14 -> E
+        15 -> F
 
     Args:
-        numero: inteiro contendo o numero
+        numero: inteiro contendo o numero decimal.
 
     Returns:
-        numero convertido para hexadecimal
+        String contendo o numero hexadecimal em maiusculo.
     """
 
     return hex(numero).replace("0x", "").upper()
 
-    
 
 def tratar_mnemonico(texto, caractere):
-    """ Recebe um texto e o numero do caractere e trata o mnemonico que vem depois do caractere
+    """
+    Recebe um texto e a posicao inicial do mnemonico.
+
+    A funcao percorre os caracteres enquanto forem letras.
+
+    Exemplo:
+
+        texto = "W=AeB;"
+        caractere = 2
+
+    Resultado:
+
+        "AeB"
+
+    O ponto e virgula nao entra no mnemonico porque nao e
+    uma letra.
 
     Args:
-        texto: string contendo o texto
-        caractere: inteiro contendo o indice do caractere
+        texto: string contendo o texto.
+        caractere: indice inicial do mnemonico.
 
     Returns:
-        mnemonico tratado
+        String contendo o mnemonico encontrado.
     """
 
     mnemonico = ''
 
+    # Continua enquanto estiver dentro do texto e encontrar
+    # caracteres alfabeticos.
     while (caractere < len(texto) and texto[caractere].isalpha()):
+
+        # Adiciona a letra ao mnemonico.
         mnemonico += texto[caractere]
+
+        # Avanca para o proximo caractere.
         caractere += 1
 
     return mnemonico
