@@ -5,7 +5,7 @@
 # Ana Flavia, Clarisse de Assis, Jamille Micaele, Julia Batista, Lucca de Paula
 # ----------------------------------#
 
-# Arquivo para funcoes de validacao do conteudo do arquivo .ula e .hex
+# Arquivo que armazena todas as funcoes de validacao do conteudo da variavel auxiliar conteudo, que contem o conteudo do arquivo .ula, e que sera convertido para hexadecimal e gravado no arquivo .hex
 
 import mnemonicos
 
@@ -52,6 +52,7 @@ def validar_conteudo_vazio(conteudo):
 
     validacao = True
 
+    # valida se o conteudo do arquivo .ula esta vazio, caso esteja, um erro e informado
     if not (conteudo):
         validacao = False
         print(f"[ERRO] - Conteudo do arquivo esta vazio!\n")

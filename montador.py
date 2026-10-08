@@ -20,14 +20,6 @@ def limpar_indice_auxiliar():
     conteudoHexadecimal.clear()
 
 
-def inserir_indice_auxiliar(indice, valor):
-    """Acrescenta um caractere hexadecimal na instrucao indicada."""
-    while len(conteudoHexadecimal) <= indice:
-        conteudoHexadecimal.append("")
-
-    conteudoHexadecimal[indice] += str(valor)
-
-
 def montagem_texto_hexa(conteudo):
     """
     Traduz o programa .ula para palavras XYS em hexadecimal.
@@ -46,16 +38,18 @@ def montagem_texto_hexa(conteudo):
 
     x = 0
     y = 0
-    indiceConteudo = 0
+    
     quantidadeErros = 0
     quantidadeAvisos = 0
     quantidadeInstrucoes = 0
+
+    #variavel para verificar se o programa possui o indicativo de 'fim.' 
     encontrouFim = False
 
+    # A primeira linha do arquivo .ula e sempre a linha 1 devido a presenca de 'inicio:'
     linha = 1
 
-    # Sem inicio:, o erro e informado e a primeira linha
-    # passa a ser traduzida como um comando comum.
+    # avalia se a primeira linha do arquivo .ula e valida, caso nao seja, o erro e informado e a montagem continua.
     if not validador.validar_inicio(conteudo[0]):
         print(
             f"[ERRO] - (linha 1) - Texto de inicio "
@@ -64,11 +58,13 @@ def montagem_texto_hexa(conteudo):
         quantidadeErros += 1
         linha = 0
 
+    # avalia cada linha do arquivo .ula (armazenado na variavel conteudo)
+    # informando erros e avisos, mas nao interrompendo a montagem.
     while linha < len(conteudo):
         texto = conteudo[linha]
         numeroLinha = linha + 1
 
-        # Linha em branco: avisa e continua.
+        # se a linha estiver em branco, um aviso e informado e a linha e ignorada.
         if texto == "":
             print(
                 f"[AVISO] - (linha {numeroLinha}) - "
@@ -78,7 +74,7 @@ def montagem_texto_hexa(conteudo):
             linha += 1
             continue
 
-        # Qualquer conteudo depois de fim. e informado e ignorado.
+        # se o programa ja encontrou o indicativo de 'fim.', qualquer linha seguinte e ignorada e um erro e informado
         if encontrouFim:
             print(
                 f"[ERRO] - (linha {numeroLinha}) - "
@@ -88,14 +84,13 @@ def montagem_texto_hexa(conteudo):
             linha += 1
             continue
 
-        # fim. encerra o programa.
+        # se a linha for o indicativo de 'fim.', a variavel encontrouFim e atualizada para True e a linha seguinte sera ignorada
         if validador.validar_fim(texto):
             encontrouFim = True
             linha += 1
             continue
 
-        # Depois de inicio:, todas as linhas de comando precisam
-        # terminar em ponto e virgula.
+        # se a linha nao terminar com ';', um erro e informado e a linha e ignorada
         if not validador.validar_pontovirgula(texto):
             print(
                 f"[ERRO] - (linha {numeroLinha}) - "
@@ -109,6 +104,8 @@ def montagem_texto_hexa(conteudo):
         # ATRIBUICAO DE X
         # --------------------------------------------------
         if texto.startswith("X"):
+
+            # se a linha nao tiver o operador '=' apos o 'X', um erro e informado e a linha e ignorada
             if len(texto) < 4 or not texto.startswith("X="):
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -116,10 +113,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # pega o valor de X, removendo o "X=" do inicio e o ";" do final
             valorTexto = texto[2:-1]
 
+            # se o valor de X estiver ausente, um erro e informado e a linha e ignorada
             if valorTexto == "":
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -127,8 +128,11 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # se o valor de X nao for um numero inteiro, um erro e informado e a linha e ignorada
             if not valorTexto.isdigit():
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -136,10 +140,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # variavel auxiliar para armazenar o valor de X convertido para inteiro
             valorX = int(valorTexto)
 
+            # se o valor de X nao estiver na faixa de 0 a 15, um erro e informado e a linha e ignorada
             if not validador.validar_hexa(valorX):
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -150,6 +158,7 @@ def montagem_texto_hexa(conteudo):
                 linha += 1
                 continue
 
+            # dando tudo certo. O valor de X e atualizado e a linha seguinte e avaliada
             x = valorX
             linha += 1
             continue
@@ -158,6 +167,8 @@ def montagem_texto_hexa(conteudo):
         # ATRIBUICAO DE Y
         # --------------------------------------------------
         if texto.startswith("Y"):
+
+            # valida se a linha possui o operador '=' apos o 'Y', caso nao possua, um erro e informado e a linha e ignorada
             if len(texto) < 4 or not texto.startswith("Y="):
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -165,10 +176,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # pega o valor de Y, removendo o "Y=" do inicio e o ";" do final
             valorTexto = texto[2:-1]
 
+            # valida se o valor de Y esta ausente, caso esteja, um erro e informado e a linha e ignorada
             if valorTexto == "":
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -176,8 +191,12 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+
+            # valida se o valor de Y e um numero inteiro, caso nao seja, um erro e informado e a linha e ignorada
             if not valorTexto.isdigit():
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -185,10 +204,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # variavel auxiliar para armazenar o valor de Y convertido para inteiro
             valorY = int(valorTexto)
 
+            # valida se o valor de Y esta na faixa de 0 a 15, caso nao esteja, um erro e informado e a linha e ignorada
             if not validador.validar_hexa(valorY):
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -197,8 +220,11 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # dando tudo certo. O valor de Y e atualizado e a linha seguinte e avaliada
             y = valorY
             linha += 1
             continue
@@ -207,6 +233,8 @@ def montagem_texto_hexa(conteudo):
         # ATRIBUICAO DE W
         # --------------------------------------------------
         if texto.startswith("W"):
+
+            # valida se a linha possui o operador '=' apos o 'W', caso nao possua, um erro e informado e a linha e ignorada
             if len(texto) < 4 or not texto.startswith("W="):
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -214,10 +242,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # pega o valor de W, removendo o "W=" do inicio e o ";" do final
             mnemonicoTexto = texto[2:-1]
 
+            # valida se o mnemonico esta ausente, caso esteja, um erro e informado e a linha e ignorada
             if mnemonicoTexto == "":
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -225,10 +257,14 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
+            # valida se o mnemonico e valido, caso nao seja, um erro e informado e a linha e ignorada
             mnemonico = validador.validar_mnemonico(mnemonicoTexto)
 
+            # se o mnemonico = -1, significa que o mnemonico e invalido, entao um erro e informado e a linha e ignorada
             if mnemonico == -1:
                 print(
                     f"[ERRO] - (linha {numeroLinha}) - "
@@ -240,22 +276,27 @@ def montagem_texto_hexa(conteudo):
                 )
                 quantidadeErros += 1
                 linha += 1
+
+                # pula para a proxima iteracao do loop, ignorando a linha atual
                 continue
 
-            # Cada instrucao e formada por X, Y e S.
+            # converte os valores de X, Y e mnemonico para hexadecimal e adiciona a variavel auxiliar conteudoHexadecimal
             xHexadecimal = tratador.converter_hexadecimal(x)
             yHexadecimal = tratador.converter_hexadecimal(y)
             mnemonicoHexadecimal = tratador.converter_hexadecimal(mnemonico)
 
+            # adiciona a instrucao completa em hexadecimal na lista de conteudoHexadecimal
             conteudoHexadecimal.append(
                 xHexadecimal + yHexadecimal + mnemonicoHexadecimal
             )
 
             quantidadeInstrucoes += 1
             linha += 1
+
+            # pula para a proxima iteracao do loop, ignorando a linha atual
             continue
 
-        # Qualquer outra variavel e invalida.
+        # caso a linha nao seja uma atribuicao de X, Y ou W, um erro e informado e a linha e ignorada
         print(
             f"[ERRO] - (linha {numeroLinha}) - "
             f"Variavel ou instrucao invalida: '{texto}'."
@@ -263,7 +304,7 @@ def montagem_texto_hexa(conteudo):
         quantidadeErros += 1
         linha += 1
 
-    # Sem fim., o erro e informado, mas o .hex e gravado.
+    # se o programa nao possuir o indicativo de 'fim.', um erro e informado
     if not encontrouFim:
         print(
             "[ERRO] - O programa nao possui um 'fim.' valido."
